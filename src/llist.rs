@@ -3,23 +3,23 @@ use std::rc::Rc;
 use std::mem;
 
 // An immutable linked list, custom-tailored for our error chain:
-pub struct LList<T>(Option<Rc<LLNode<T>>>);
-pub struct LLNode<T> {
+pub(crate) struct LList<T>(Option<Rc<LLNode<T>>>);
+struct LLNode<T> {
     el  : T,
     next: LList<T>,
 }
 
 impl<T> LList<T> {
-    pub fn new() -> Self { LList(None) }
-    pub fn prepend(&self, el:T) -> Self {
+    pub(crate) fn new() -> Self { LList(None) }
+    pub(crate) fn prepend(&self, el:T) -> Self {
         LList(Some(Rc::new(LLNode{el:el,
                                   next:LList::clone(self)})))
     }
-    fn head<'a>(&'a self) -> Option<&'a T> {
+    pub(crate) fn head<'a>(&'a self) -> Option<&'a T> {
         self.0.as_ref().map(|rc| &rc.el)
     }
 
-    fn iter(&self) -> Iter<T> { Iter(LList::clone(self)) }
+    pub(crate) fn iter(&self) -> Iter<T> { Iter(LList::clone(self)) }
 }
 
 impl<T> Clone for LList<T> {
@@ -62,7 +62,7 @@ impl<T> fmt::Debug for LList<T> where T:fmt::Debug {
     }
 }
 
-struct Iter<T>(LList<T>);
+pub(crate) struct Iter<T>(LList<T>);
 
 impl<T> Iterator for Iter<T> {
     type Item = LList<T>;
@@ -74,6 +74,28 @@ impl<T> Iterator for Iter<T> {
         } else {
             None
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn aaa_llist() {
+        let l : LList<String> = LList::new();
+        assert_eq!(format!("{}", l), "[]");
+        assert_eq!(format!("{:?}", l), "LList[]");
+        let l = l.prepend("a".to_string());
+        assert_eq!(format!("{}", l), "[ a ]");
+        assert_eq!(format!("{:?}", l), r#"LList[ "a" ]"#);
+        let l = l.prepend("b".to_string());
+        assert_eq!(format!("{}", l), "[ b a ]");
+        assert_eq!(format!("{:?}", l), r##"LList[ "b" "a" ]"##);
+
+        let mut l : LList<i32> = LList::new();
+        for i in 5..25 { l = l.prepend(i) }
+        assert_eq!(format!("{}", l), "[ 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 ]");
     }
 }
 

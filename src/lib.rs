@@ -1,2 +1,5 @@
-pub mod llist;
+mod llist;
+mod kerr;
+
+pub use crate::kerr::KErr;
 

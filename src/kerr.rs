@@ -1,8 +1,11 @@
+use super::llist::LList;
+
+use std::fmt;
 
 #[derive(Debug)]
 pub struct KErr {
     pub err   : String,
-    pub chain : LList<String>,
+    chain : LList<String>,
 }
 
 impl KErr {
@@ -30,3 +33,4 @@ impl fmt::Display for KErr {
 impl PartialEq for KErr {
     fn eq(&self, other:&Self) -> bool { self.err==other.err }
 }
+
