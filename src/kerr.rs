@@ -1,6 +1,7 @@
 use super::llist::LList;
 
 use std::fmt;
+use std::error::Error;
 
 #[derive(Debug)]
 pub struct KErr {
@@ -32,5 +33,10 @@ impl fmt::Display for KErr {
 }
 impl PartialEq for KErr {
     fn eq(&self, other:&Self) -> bool { self.err==other.err }
+}
+
+impl Error for KErr {
+    // The defaults are fine for now.
+    // Maybe I should create a custom 'source()' implementation...
 }
 
