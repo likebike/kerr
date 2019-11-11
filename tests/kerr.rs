@@ -4,7 +4,7 @@ use kerr::KErr;
 fn aaa_kerr() {
     let mut e = KErr::new("ABC");
     assert_eq!(format!("{}", e), "ABC");
-    assert_eq!(format!("{:?}", e), r#"KErr { err: "ABC", chain: LList[] }"#);
+    assert_eq!(format!("{:?}", e), r#"KErr{ err:"ABC", chain:[] }"#);
     e = e.pre("a");
     assert_eq!(format!("{}", e), "a : ABC");
     e = e.pre("b");

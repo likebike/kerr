@@ -3,7 +3,6 @@ use super::llist::LList;
 use std::fmt;
 use std::error::Error;
 
-#[derive(Debug)]
 pub struct KErr {
     pub err   : String,
     chain : LList<String>,
@@ -29,6 +28,11 @@ impl fmt::Display for KErr {
         if nonempty { write!(f, " : ")?; }
         write!(f, "{}", self.err)?;
         Ok(())
+    }
+}
+impl fmt::Debug for KErr {
+    fn fmt(&self, f:&mut fmt::Formatter) -> Result<(), fmt::Error> {
+        write!(f, "KErr{{ err:{:?}, chain:{} }}", self.err, self.chain)
     }
 }
 impl PartialEq for KErr {
