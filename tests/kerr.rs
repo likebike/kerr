@@ -11,6 +11,7 @@ fn aaa_kerr() {
     assert_eq!(format!("{}", e), "b : a : ABC");
     e = e.pre("c");
     assert_eq!(format!("{}", e), "c : b : a : ABC");
+    assert_eq!(format!("{:?}", e), r#"KErr{ err:"ABC", chain:[ c, b, a ] }"#);
 
     match e.err.as_str() {
         "ABC" => {}
